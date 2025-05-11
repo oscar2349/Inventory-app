@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://sqlserver:1433;databaseName=InventoryDB
+    username: sa
+    password: YourStrong!Passw0rd
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8080

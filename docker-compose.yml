@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - inventory-net
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    depends_on:
+      - sqlserver
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=InventoryDB
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: YourStrong!Passw0rd
+    networks:
+      - inventory-net
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    networks:
+      - inventory-net
+
+networks:
+  inventory-net:
+    driver: bridge
